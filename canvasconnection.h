@@ -4,7 +4,6 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
-#include <QTimer>
 #include <QSslConfiguration>
 #include <QString>
 #include <QByteArray>
@@ -32,6 +31,5 @@ signals:
 public slots:
     //network requests end
     void quit();
-
 };
-#endif // CANVASCONNECTION_H
+#endif CANVASCONNECTION_H

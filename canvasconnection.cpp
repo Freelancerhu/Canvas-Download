@@ -13,16 +13,17 @@ canvasConnection::canvasConnection(QObject *parent) :
 //Send network requests
 void canvasConnection::sendRequest(const QString &strUrl)
 {
-	// create custom temporary event loop on stack
+	m_strUrl = strUrl;
+	//Create custom temporary event loop on stack
     QEventLoop eventLoop;
 	//Open a file
 	QFile file("out.json");
-    m_strUrl = strUrl;
+	//Send request to Canvas by using token.
     QNetworkRequest netRequest;
     //Set the information of url.
     netRequest.setUrl(QUrl(strUrl));
-    //Posts a request to obtain the contents of the target request and
-    //returns a new QNetworkReply object opened for reading which emits the readyRead() signal whenever new data arrives.
+    /*Posts a request to obtain the contents of the target request and
+    returns a new QNetworkReply object opened for reading*/
     m_pNetworkReply =m_pNetworkManager->get(netRequest);
     //Signal when the network requests end
     QObject::connect(m_pNetworkManager,SIGNAL(finished(QNetworkReply*)),&evenLoop,SLOT(quit()));
@@ -30,16 +31,18 @@ void canvasConnection::sendRequest(const QString &strUrl)
 	eventLoop.exec();
 	QTextStream out(&file);
     if (m_pNetworkReply->error() == QNetworkReply::NoError) {
-        // success
+        //success
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return;
         file.write(m_pNetworkReply->readAll());
         qDebug() << "Success" <<m_pNetworkReply->readAll();
+		//release memory
         delete m_pNetworkReply;
     }
     else {
         //failure
         qDebug() << "Failure" ;
-        delete reply;
+		//release memory
+        delete m_pNetworkReply;
     }
 }
