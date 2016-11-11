@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 void sendRequest(const QString strUrl){
 
     const QString m_strUrl = strUrl;
+    //create a download file
     QFile file("out.json");
     // create custom temporary event loop on stack
     QEventLoop eventLoop;
