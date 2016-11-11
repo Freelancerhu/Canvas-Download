@@ -31,7 +31,7 @@ signals:
     void signal_requestFinished(bool bSuccess,const QString& strResult);
 public slots:
     //network requests end
-    void slotreply();
+    void quit();
 
 };
 #endif // CANVASCONNECTION_H
