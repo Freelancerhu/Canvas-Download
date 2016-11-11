@@ -10,19 +10,20 @@
 #include <QFile>
 using namespace std;
 
-void sendRequest();
+void sendRequest(const QString strUrl);
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     //send request to Canvas.
-    sendRequest();
+    sendRequest("https://canvas.instructure.com/api/v1/courses?access_token=1030~y2v695pyuP5tf7SbJVuosakVODI0LyqrA5MXFWgJYscYmgOSL3VqXezUdOSyMYxL");
     return a.exec();
 
 }
 
-void sendRequest(){
+void sendRequest(const QString strUrl){
 
+    const QString m_strUrl = strUrl;
     QFile file("out.json");
     // create custom temporary event loop on stack
     QEventLoop eventLoop;
@@ -32,7 +33,8 @@ void sendRequest(){
     QObject::connect(&Canvas, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
 
     // send request to Canvas by using token
-      QNetworkRequest request( QUrl( QString("https://canvas.instructure.com/api/v1/courses?access_token=1030~y2v695pyuP5tf7SbJVuosakVODI0LyqrA5MXFWgJYscYmgOSL3VqXezUdOSyMYxL") ) );
+    QNetworkRequest request;
+    request.setUrl(QUrl(strUrl));
 
    //test of using another api.
    //QNetworkRequest request( QUrl( QString("https://canvas.instructure.com/api/v1/courses/14812/assignments/55596?access_token=1030~y2v695pyuP5tf7SbJVuosakVODI0LyqrA5MXFWgJYscYmgOSL3VqXezUdOSyMYxL") ) );
@@ -57,5 +59,3 @@ void sendRequest(){
         delete reply;
     }
 }
-
-
