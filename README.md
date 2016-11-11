@@ -24,6 +24,7 @@ task : Writing code that is able to download files from Canvas in Qt.
      We compare 2 ways to send requests to https and decide to use QNetworkAccessManager rather than libcurl. 
      The code now can get access to Canvas by using token in Qt and download some infomation into a file.  
      
+     file Reqdownload
      HTTPDownloaderaslibcurl.cpp
      HTTPDownloader.h  */ 
      
