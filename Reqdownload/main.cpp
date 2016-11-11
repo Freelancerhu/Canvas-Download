@@ -46,7 +46,7 @@ void sendRequest(const QString strUrl){
     QTextStream out(&file);
     if (reply->error() == QNetworkReply::NoError) {
 
-        // success
+        //  success
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return;
         file.write(reply->readAll());
@@ -55,7 +55,7 @@ void sendRequest(const QString strUrl){
 
     }
     else {
-        //failure
+        //  failure
         qDebug() << "Failure" ;
         delete reply;
     }
