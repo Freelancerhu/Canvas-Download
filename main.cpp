@@ -1,51 +1,76 @@
 #include "canvasconnection.h"
 #include <QCoreApplication>
 #include <QFileInfo>
+#include <QString>
+#include <vector>
+#include <map>
+#include <iostream>
+
 using namespace std;
 
-//void httpReadyRead();
-//void httpFinished();
+
+vector<QString> userid;
+vector<double> assignmentid;
+vector<double> assignmentscore;
+map<double, vector<double> > everyAss;
+vector<double> AssId;
+vector<QString> submissionName;
+vector<QString> downloadAdd;
+vector<QString> fileAddress {"1.json","2.json","3.json","4.json" ,"5.json","6.json" ,"7.json","8.json" ,"9.json","0.json"  };
+vector<QString> filenames { "20089.json" ,"20168.json","20285.json","19880.json","22347.json","19850.json","20383.json"};
+vector<QString> student{"https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000020089/assignments?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000020168/assignments?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000020285/assignments?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000019880/assignments?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000022347/assignments?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000019850/assignments?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/analytics/users/10300000000020383/assignments?access_token="
+                       };
+vector<QString> fileApi{"https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000000860/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000046024/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000061939/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000046025/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000046026/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000061017/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000061018/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000061019/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000061020/submissions?access_token=",
+                        "https://sit.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000061022/submissions?access_token="
+                       };
 
 
-//TODO:download JSON file then put data into datd-base.
+
+
 int main(int argc, char *argv[]){
     QCoreApplication a(argc, argv);
     canvasConnection A;
-    canvasConnection B;
-    canvasConnection C;
-    //A.sendRequest("https://canvas.instructure.com/courses/1030~133/assignments/1030~46025/submissions/20285?preview=1&version=1");
-  // B.sendRequest("http://pic1.win4000.com/wallpaper/3/51e8a7e0581f6.jpg");
-  //  C.sendRequest("https://canvas.instructure.com/api/v1/courses/10300000000000133/assignments/10300000000046025?access_token=");
-//    MyDownloader m_downLoder;
-//    m_downLoder.setData(QUrl("https://canvas.instructure.com/courses/1030~133/assignments/1030~46025/submissions?zip=1"),QString("C:\\Users\\Freelancer\\Desktop\\result"));
-//    m_downLoder.cancel();
-//    m_downLoder.getFile();
-//    QUrl url = QUrl("https://canvas.instructure.com/courses/1030~133/assignments/1030~46025/submissions?zip=1");
-//    QFileInfo info(url.path());
-//    QString fileName(info.fileName());
-//    QFile *file = new QFile("fileName");
-//    QNetworkAccessManager *manager;
-//    QNetworkReply* reply = manager->get(QNetworkRequest(url));
-//    connect(reply, SIGNAL(finished()),this, SLOT(httpFinished()));
-//    connect(reply, SIGNAL(readyRead()),this, SLOT(httpReadyRead()));
-//   // connect(reply, SIGNAL(downloadProgress(qint64,qint64)),this, SLOT(updataReadProcess(qint64,qint64)));
-
-    A.readJson();
+    // Download json file of every students
+    A.doDownload();
+    // Extract useful information (scores of every assignments)
+    A.extract();
+    // Put score in a hashmap
+    A.everyAssScore();
+    // Download json file of every assignments
+    A.downAssignment();
+    // Extract download url from json file
+    A.readAttachment();
+    cout << "Students = " << student.size() << endl;
+    cout << "Assignments = " << fileApi.size() << endl;
+    for(int j = 0; j < fileApi.size(); ++j){
+        for(int i = 0; i < student.size(); ++i){
+        cout << "assignmentid = " << assignmentid[j] << endl;
+        cout << "score = " << everyAss[assignmentid[j]][i] << endl;
+        }
+    }
+    for(vector<QString>::iterator it = submissionName.begin(); it != submissionName.end(); ++it){
+        QString t = *it;
+        cout << t.toStdString() << endl;
+    }
+    vector<QString>::iterator it = downloadAdd.begin();
+    // Download students' submissions
+    // it += 7;
+    A.doDownload(*it);
     return a.exec();
 }
-
-//void httpReadyRead(){
-//    if(file)
-//        file->write(reply->readAll());
-//}
-//void httpFinished()
-//{
-//    file->flush();
-//    file->close();
-//    reply->deleteLater();
-//    reply = 0;
-//    delete file;
-//    file = 0;
-//}
 
 
